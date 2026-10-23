@@ -5,7 +5,11 @@ st.title('🔴 Live Matches'); st.write('API requests require valid provider cre
 mode=st.radio('Choose view',['Live API','Recent API','Local demo database'],horizontal=True)
 if mode!='Local demo database':
  if st.button('Fetch matches',type='primary'):
-  try: st.json(get_live_matches() if mode=='Live API' else get_recent_matches())
+          try:
+            data = get_live_matches() if mode == 'Live API' else get_recent_matches()
+            if isinstance(data, dict):
+                data.pop("apikey", None)
+            st.json(data)
   except CricbuzzAPIError as e: st.warning(str(e)); st.caption('Check API key, subscription, host and current endpoint docs.')
 else:
  with get_connection() as conn:
